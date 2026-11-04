@@ -1,0 +1,103 @@
+% ===============================================================
+%  ANNEXES (hors pagination du corps)
+% ===============================================================
+\clearpage
+\pagenumbering{arabic}
+\renewcommand{\thepage}{A-\arabic{page}}
+
+\chapter{Hypothèses du simulateur}
+\label{annexe:hypotheses}
+
+Le tableau~\ref{tab:hypotheses} recense les principales hypothèses du moteur. Toutes sont modifiables dans la vue experte du simulateur, où leur source est rappelée.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\caption{Principales hypothèses du moteur de simulation et leurs sources}
+\label{tab:hypotheses}
+{\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Paramètre} & \textbf{Valeur} & \textbf{Source} \\
+\midrule
+Écrêtement maximal & 5~\% de la production, chaque année & Fiche du projet~\cite{fiche_projets} \\
+Seuil de vigilance & 120~\% de la consommation horaire & Fiche du projet \\
+Batterie & Puissance solaire du scénario, 2~h, rendement 90~\%, état initial 50~\% & Fiche du projet, choix du groupe \\
+Pertes photovoltaïques & Incluses dans la production mesurée & Choix du groupe (section~\ref{sec:prod}) \\
+Coût de la batterie & 395~€/kWh ; 49~€/kW/an ; 15 ans & \gls{nrel}~\cite{nrel2025}, change BCE~\cite{bce} \\
+Taux d'actualisation & 4~\% & \gls{rte}~\cite{rte_fe2050} \\
+Électricité évitée & 0,194~€/kWh (prix de gros 0,061~€/kWh) & \gls{trve} au 01/02/2026~\cite{cre_trve}, RTE~\cite{rte_bilan2025} \\
+Valeur du surplus & 0,02~€/kWh & \gls{cre}~\cite{cre_surplus} \\
+Ballons d'eau chaude & 52~\% des résidences principales, 1~MWh/an, 2,2~kW, chauffe de 10~h à 17~h & Ordre de grandeur national~\cite{construction21}, \gls{cre}~\cite{cre_hphc}, choix du groupe \\
+Population 2035 & × 1,029 par rapport à 2023 & \gls{insee}, Omphale scénario central~\cite{insee_omphale} \\
+Rénovation des logements & $-10$~\% de consommation résidentielle & Fiche du projet 1 \\
+Véhicules électriques 2035 & 40~\% du parc, 30~km/j, 18~kWh/100~km & Fiches des projets 1 et 3 \\
+Recharge des \gls{ve} & 30~\% libre, 62~\% tarifaire, 8~\% pilotée & \gls{rte}, Bilan prévisionnel 2025~\cite{rte_bp2025} \\
+Pompes à chaleur 2035 & 25~\% des logements, COP de 3 & Fiche du projet 1 \\
+\bottomrule
+\end{tabularx}}
+\end{table}
+
+\clearpage
+\chapter{Calculs vérifiables à la main}
+\label{annexe:calculs}
+
+Le taux de couverture et l'écrêtement ne peuvent être obtenus qu'en simulant les 43~824 heures. Les autres grandeurs clés du rapport se recalculent en revanche simplement, ce que résume le tableau~\ref{tab:calculs}.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\caption{Recalcul des principaux ordres de grandeur}
+\label{tab:calculs}
+{\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{3.0cm}@{}}
+\toprule
+\textbf{Grandeur} & \textbf{Calcul} & \textbf{Résultat} \\
+\midrule
+Production solaire actuelle & 117,7~MW × 1~027~kWh/kWc & $\approx$ 121~GWh/an \\
+Production éolienne actuelle & 114,4~MW × 8~766~h × 21,6~\% & $\approx$ 217~GWh/an \\
+Production en volume & (121 + 217 + 6) / 812~GWh & 42~\% \\
+Batterie de la fiche, scénario B & 2~h × 235,5~MW & 471~MWh \\
+Investissement & 471~000~kWh × 395~€/kWh & 186~M€ \\
+Exploitation annuelle & 235~500~kW × 49~€/kW/an & 11,5~M€/an \\
+Facteur d'actualisation & $(1 - 1{,}04^{-15}) / 0{,}04$ & 11,12 \\
+VAN, pilotage des excès & $(6{,}4 - 11{,}5) \times 11{,}12 - 186$ & $\approx -243$~M€ \\
+Ballons d'eau chaude & 50~957 × 52~\% ; × 2,2~kW ; × 1~MWh & 26~000 ; 58~MW ; 26~GWh \\
+Puissance ajoutée recommandée & 0,25 × 117,7 + 0,5 × 114,4 & 29 + 57 = 87~MW \\
+Quote-part de raccordement & 86~600~kW × 45,09~€/kW & $\approx$ 3,9~M€ \\
+Achats évités & (475 $-$ 363)~GWh × 0,194~€/kWh & $\approx$ 22~M€/an \\
+Énergie écrêtée en B & 8,2~\% × 465~GWh & $\approx$ 38~GWh/an \\
+\bottomrule
+\end{tabularx}}
+\end{table}
+
+\clearpage
+\chapter{Résultats année par année}
+\label{annexe:annees}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\caption{Consommation, ressource et indicateurs du parc actuel selon l'année météo}
+\label{tab:annees}
+{\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{@{}l*{6}{>{\centering\arraybackslash}X}@{}}
+\toprule
+\textbf{Année} & \textbf{Consommation (GWh)} & \textbf{Pointe (MW)} & \textbf{Productible solaire (kWh/kWc)} & \textbf{Couverture horaire} & \textbf{Écrêtement} & \textbf{Heures de vigilance} \\
+\midrule
+2021 & 869 & 177 & 1~014 & 38,4~\% & 0,9~\% & 207 \\
+2022 (type) & 799 & 162 & 1~054 & 42,1~\% & 0,6~\% & 174 \\
+2023 & 782 & 159 & 1~086 & 44,2~\% & 0,9~\% & 232 \\
+2024 & 803 & 164 & 915 & 39,6~\% & 0,2~\% & 90 \\
+2025 (estimée) & 809 & 167 & 1~064 & 43,4~\% & 0,4~\% & 123 \\
+\bottomrule
+\end{tabularx}}
+\end{table}
+
+Ces écarts justifient de raisonner sur plusieurs années. L'année 2021, froide, consomme 11~\% de plus que 2023, tandis que le productible solaire varie de 16~\% entre 2024 et 2023. La couverture du parc actuel varie ainsi de près de 6 points selon l'année. L'année 2022 a été retenue comme année type parce que l'ensemble de ses indicateurs est le plus proche de la moyenne des cinq années.
+
+\clearpage
+\chapter{Traçabilité et reproductibilité}
+\label{annexe:tracabilite}
+
+Toutes les données, les scripts et les résultats du projet sont conservés dans un dossier unique. Les données brutes y sont accompagnées d'un manifeste qui indique pour chaque fichier l'adresse de la requête, la date de téléchargement, la taille et l'empreinte SHA-256. Une vingtaine de scripts Python numérotés enchaînent la collecte, le traitement, les contrôles de cohérence, la simulation, les analyses de sensibilité et l'export des données vers le simulateur. Un journal de méthode consigne chaque choix, les alternatives envisagées, leurs effets chiffrés sur les résultats et les corrections apportées à la suite d'un audit interne réalisé le 21 octobre 2026. Ce journal nous a permis de revenir sur plusieurs hypothèses au cours du projet, comme le traitement des capacités d'éCO2mix ou le coût d'exploitation de la batterie, en mesurant à chaque fois leur influence sur les conclusions. Le simulateur web est disponible à l'adresse \lienSimulateur.
