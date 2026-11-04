@@ -1,0 +1,25 @@
+% ===============================================================
+%  INTRODUCTION (~1 page)
+% ===============================================================
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+\markboth{Introduction}{}
+\label{chap:intro}
+
+\section*{Un territoire qui produit beaucoup, mais pas au bon moment}
+
+Mauges Communauté est une communauté d'agglomération du sud-ouest du Maine-et-Loire qui regroupe six communes nouvelles et 123~368 habitants sur 1~313~km²~\cite{insee_dossier}. Elle consomme en moyenne 812~GWh d'électricité par an, dont plus d'un tiers pour son industrie~\cite{odre_conso}. Avec 118~MW de solaire répartis sur plus de 5~000 installations et 114~MW d'éolien répartis sur dix parcs~\cite{odre_registre}, le territoire produit chaque année environ 344~GWh, soit 42~\% de sa consommation. Ce chiffre flatteur repose cependant sur une comparaison de volumes annuels. Or l'électricité se consomme au moment où elle est produite, et le surplus solaire d'un midi de juillet ne sert à rien une nuit de janvier. La vraie question est donc de savoir quelle part de la consommation est couverte localement heure par heure, et ce que devient cette part lorsque l'on ajoute des panneaux et des éoliennes.
+
+\section*{Commande et problématique}
+
+La fiche du projet~\cite{fiche_projets} demande d'étudier trois trajectoires de développement. Le scénario A conserve le parc actuel, le scénario B double la puissance solaire et le scénario C la triple tout en augmentant l'éolien de moitié. Deux règles encadrent ces scénarios. L'énergie écrêtée ne doit pas dépasser 5~\% de la production annuelle, et une heure devient une heure de vigilance pour le réseau dès que la production locale dépasse 120~\% de la consommation. Le groupe doit tester une solution de flexibilité, en estimer le coût, développer un simulateur à curseurs et recommander une trajectoire aux élus. Notre travail répond donc à la problématique suivante.
+
+\begin{center}
+\begin{minipage}{0.9\textwidth}
+\itshape Jusqu'où Mauges Communauté peut-elle développer le solaire et l'éolien sans perdre plus de 5~\% de sa production ni saturer son réseau, et quelle flexibilité le permet au meilleur coût~?
+\end{minipage}
+\end{center}
+
+\section*{Démarche et organisation du rapport}
+
+Répondre à cette question suppose d'en résoudre quatre autres, qui structurent ce rapport. La première est méthodologique. Comment connaître heure par heure la production et la consommation d'un territoire pour lequel aucune mesure horaire n'est publiée~? Le chapitre~\ref{chap:methode} y répond en détaillant le choix des données, leur traitement et la reconstruction des séries horaires, sans perdre de vue les habitants et les activités qui se cachent derrière les mégawattheures. La deuxième question porte sur les effets physiques des scénarios. Que deviennent le taux de couverture, l'écrêtement et les heures de vigilance quand on augmente le solaire et l'éolien~? La troisième est économique. La batterie demandée par la fiche est-elle une réponse, et à quel coût~? Le chapitre~\ref{chap:resultats} traite ces deux questions. La quatrième est décisionnelle. Quelle trajectoire recommander, et le réseau peut-il l'accueillir~? Le chapitre~\ref{chap:reco} y répond, avant que le chapitre~\ref{chap:discussion} ne discute les limites de l'étude. Tout au long du rapport, nous avons cherché à confronter chaque résultat à un ordre de grandeur indépendant, car un modèle qui ne se remet pas en question produit des chiffres précis mais pas forcément justes.
