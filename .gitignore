@@ -1,0 +1,15 @@
+.vscode/
+out/
+**/out/
+*.synctex.gz
+*.aux
+*.log
+*.out
+*.toc
+*.bcf
+*.acn
+*.glo
+*.ist
+*.lof
+*.lot
+*.run.xml
