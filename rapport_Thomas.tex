@@ -1,0 +1,512 @@
+% ============================================================
+%   Intégration des EnR à Mauges Communauté
+%   Projet ESIEE Paris x Sopra Steria — rapport de synthèse
+%   Les figures (images/) et tableaux (tables/) sont générés par build.py
+%   à partir du moteur de la maquette (maquette_Imran.html + data.js).
+% ============================================================
+\documentclass[11pt, a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{setspace}
+\setstretch{1.12}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{graphicx}
+\graphicspath{{images/}}
+\usepackage{float}
+\usepackage{caption}
+\captionsetup{font=small, labelfont=bf, format=plain}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{eurosym}
+\usepackage{pifont}
+\usepackage{enumitem}
+\setlist{itemsep=2pt, topsep=4pt}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, fit}
+\usepackage{fancyhdr}
+\usepackage[colorlinks=true, linkcolor=NavyBlue, urlcolor=NavyBlue, citecolor=NavyBlue]{hyperref}
+\usepackage{titlesec}
+
+\definecolor{bleu}{HTML}{2A78D6}
+\definecolor{orange}{HTML}{EB6834}
+\definecolor{vert}{HTML}{1BAF7A}
+\definecolor{gris}{HTML}{52514E}
+
+\titleformat{\chapter}[display]{\normalfont\bfseries\Large\color{black}}{\chaptertitlename\ \thechapter}{6pt}{\LARGE}
+\titlespacing*{\chapter}{0pt}{-10pt}{22pt}
+\titleformat{\section}{\normalfont\bfseries\large\color{black}}{\thesection}{.6em}{}
+
+\newenvironment{retenir}{\par\medskip\noindent\textbf{À retenir.}\ }{\par\medskip}
+\newenvironment{definition}[1]{\par\medskip\noindent\textbf{#1.}\ }{\par\medskip}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{gris}Intégration des EnR à Mauges Communauté}
+\fancyhead[R]{\small\color{gris}\thepage}
+\renewcommand{\headrulewidth}{.4pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\small\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+\newcommand{\pct}{\,\%}
+\newcommand{\gwh}{\,GWh}
+\newcommand{\mw}{\,MW}
+
+% Page de garde reprise de mon_rapport.tex
+\title{
+  \vspace{-1cm}
+  {\large ESIEE Paris x Sopra Steria}\\[0.5cm]
+  {\Huge\bfseries Intégration des EnR à Mauges Communauté}\\[0.3cm]
+  {\Large Jusqu'où peut-on augmenter la production EnR locale ?}\\[1.5cm]
+  \centering
+  \includegraphics[width=0.5\linewidth]{images/mauges.jpg}
+}
+\author{Imran Fagbemi, Noé Quetin, Habib Keita}
+\date{\today}
+
+% ============================================================
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+% ============================================================
+%  PRÉFACE — SYNTHÈSE
+% ============================================================
+\chapter*{Préface : synthèse de l'étude}
+\addcontentsline{toc}{chapter}{Préface : synthèse de l'étude}
+\markboth{Préface}{Préface}
+
+\begin{retenir}
+Sans batterie, Mauges Communauté peut faire passer sa production solaire et éolienne de \textbf{344 à environ 480\gwh par an} (solaire $+25\pct$, éolien $+50\pct$, ballons d'eau chaude chauffés à midi). La part de la consommation couverte \emph{heure par heure} monte alors de \textbf{41,6 à 55,4\pct}, l'énergie perdue par écrêtement reste sous la limite de 5\pct{} (3,2\pct) et la consommation achetée au réseau baisse de 59 à 45\pct. Aller plus loin (scénarios B et C du cahier des charges) dépasse la limite d'écrêtement et sature plusieurs postes sources.
+\end{retenir}
+
+\section*{Points de départ}
+
+La Communauté d'Agglomération Mauges Communauté (EPCI 200060010), en Maine-et-Loire, rassemble 6 communes nouvelles pour 123\,368 habitants et environ 1\,313~km². Ce territoire rural et industrialisé a consommé 802,67\gwh d'électricité en 2024, soit environ 6,5~MWh par habitant. Cette demande tient à la présence de 369 établissements industriels et à une forte proportion de maisons individuelles (93,4\pct{} des logements), dont 43,1\pct{} se chauffent à l'électricité \cite{insee_rp,odre_conso}.
+
+Au 31 décembre 2025, le parc renouvelable installé atteint 233,51~MW : 117,73~MWc de photovoltaïque (5\,353 installations), 114,40~MW d'éolien terrestre (10 parcs), 1,16~MW de bioénergie et 0,22~MW d'hydraulique \cite{odre_registre}. Sur les cinq années étudiées (2021-2025), ce parc produit en moyenne 344\gwh par an, soit \textbf{42\pct{} de la consommation} (de 39 à 45\pct{} selon l'année). Mais produire autant que l'on consomme sur l'année ne veut pas dire consommer ce que l'on produit : une fois la production et la consommation comparées \emph{heure par heure}, seuls \textbf{41,6\pct} de la consommation sont couverts sur place.
+
+\section*{Cahier des charges}
+
+Le cahier des charges de Sopra Steria demande un simulateur au pas horaire sur cinq années (2021-2025, soit 43\,824 heures) qui compare trois trajectoires :
+\begin{itemize}
+  \item \textbf{A} : puissances installées actuelles (117,7~MW de solaire, 114,4~MW d'éolien) ;
+  \item \textbf{B} : $+100\pct$ de solaire (235,5~MW) ;
+  \item \textbf{C} : $+200\pct$ de solaire (353,2~MW) et $+50\pct$ d'éolien (171,6~MW).
+\end{itemize}
+Les règles imposées sont : un stockage facultatif équivalent à 2~heures de la puissance solaire, avec un rendement aller-retour de 90\pct{} ; un écrêtement annuel limité à 5\pct{} de la production ; une \emph{heure de vigilance} dès que la production locale dépasse 120\pct{} de la consommation locale horaire. Le groupe doit tester une solution de flexibilité, estimer son coût relatif, et recommander une trajectoire.
+
+\section*{Ce que fait le simulateur}
+
+Pour chaque heure de chaque année, le simulateur calcule la production solaire et éolienne d'un scénario, la compare à la consommation, applique les leviers de flexibilité choisis (batterie, ballons d'eau chaude, véhicules électriques, plafond d'injection) et en déduit les indicateurs du cahier des charges. Il se présente comme une page web (vues Élu, Démo et Expert) avec des curseurs de puissance.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=7mm, font=\small,
+  box/.style={draw=bleu, fill=bleu!6, rounded corners=2pt, align=center, text width=3.1cm, minimum height=1.5cm, inner sep=4pt},
+  lev/.style={draw=vert, fill=vert!8, rounded corners=2pt, align=center, text width=3.1cm, minimum height=1.1cm, inner sep=4pt},
+  arr/.style={-{Stealth[length=2.5mm]}, thick, color=gris}]
+\node[box] (don) {\textbf{Données}\\ ODRÉ, Enedis, RTE, Météo-France, INSEE, Caparéseau};
+\node[box, right=of don] (mot) {\textbf{Moteur horaire}\\ 5 années $\times$ 8\,760~h\\ production $-$ consommation};
+\node[box, right=of mot] (ind) {\textbf{Indicateurs}\\ couverture, surplus, écrêtement, vigilance, pointes};
+\node[box, right=of ind] (dec) {\textbf{Décision}\\ scénario recommandé, postes sources};
+\node[lev, above=of mot] (lev) {\textbf{Leviers}\\ batterie, ballons, VE, plafond};
+\draw[arr] (don) -- (mot); \draw[arr] (mot) -- (ind); \draw[arr] (ind) -- (dec); \draw[arr] (lev) -- (mot);
+\end{tikzpicture}
+\caption{Principe du simulateur.}
+\end{figure}
+
+\section*{Critères chiffrés de comparaison}
+
+Le tableau~\ref{tab:synthese} résume les scénarios sur les critères du cahier des charges et sur les objectifs que nous nous sommes fixés : taux de couverture horaire, part de la consommation achetée au réseau, énergie écrêtée (limite : 5\pct), heures de vigilance, pointe d'injection, et production solaire par rapport à l'objectif de 175\gwh du plan climat (PCAET) en 2030 \cite{pcaet_mauges}. Les valeurs sont des moyennes sur les cinq années météo ; le scénario « Recommandé » est celui de la maquette (solaire $+25\pct$, éolien $+50\pct$, ballons d'eau chaude chauffés à midi, sans batterie).
+
+% \begin{table}[htbp]
+% \centering\small
+% \caption{Les scénarios sur les critères chiffrés (moyennes 2021-2025). \textcolor{green!45!black}{\ding{51}} : écrêtement sous 5\pct{} chaque année ; \textcolor{red!70!black}{\ding{55}} : limite dépassée.}
+% \label{tab:synthese}
+% \resizebox{\textwidth}{!}{\input{tables/tab_synthese}}
+% \end{table}
+
+\section*{Réponse à la problématique}
+
+\begin{enumerate}
+  \item \textbf{Doubler le solaire (B) ne fonctionne pas sans stockage} : le taux de couverture n'augmente que de 8 points (49,5\pct) car le solaire produit tout en même temps, à midi, et $8{,}2\pct$ de la production est perdue, au-delà de la limite de 5\pct.
+  \item \textbf{L'éolien est plus utile que le solaire supplémentaire} : il produit surtout l'hiver et la nuit, quand la consommation est la plus forte et que le solaire est absent.
+  \item \textbf{Une batterie de la taille du cahier des charges ne se rembourse pas} : elle coûte 186~M\euro{} pour le scénario B et sa valeur actuelle nette est de l'ordre de $-200$~M\euro{} ; déplacer le chauffage des 26\,000 ballons d'eau chaude vers midi apporte déjà une partie du bénéfice.
+  \item \textbf{Le réseau est le second verrou} : si l'on étendait le parc à l'identique, les postes de Chemillé, Saint-Pierre-Montlimart, Le Genêt et Aubigné seraient saturés ; il faut orienter les nouveaux projets, surtout l'éolien, vers les postes encore libres (Recouvrance, Saint-Georges, Cholet, Vallet).
+  \item \textbf{Trajectoire recommandée} : solaire $+25\pct$, éolien $+50\pct$, ballons à midi. Le plafond de 5\pct{} d'écrêtement permet jusqu'à environ $+40\pct$ de solaire avec ces ballons (tableau~\ref{tab:frontiere}) ; atteindre l'objectif solaire du PCAET ($+45\pct$) est possible en limitant l'éolien à $+25\pct$.
+\end{enumerate}
+
+\section*{Limites de l'étude}
+
+\begin{itemize}
+  \item Le simulateur ne chiffre \textbf{ni l'investissement, ni les coûts d'exploitation, ni le coût du kWh} du solaire et de l'éolien supplémentaires, ni les \textbf{surfaces disponibles} : seuls les achats d'électricité évités et le bilan de la batterie sont calculés. Un ordre de grandeur foncier est proposé au chapitre~\ref{chap:enjeux}.
+  \item La charge des postes sources est une \textbf{estimation proportionnelle} au parc existant, pas une étude de flux (tension, courant) : elle indique où regarder, pas où il y a un défaut.
+  \item Les prix utilisés (tarif réglementé de 0,194~\euro/kWh, surplus à 0,02~\euro/kWh) sont des hypothèses de référence ; les conclusions économiques sur la batterie sont à relire à la lumière de cette sensibilité.
+  \item Les pertes photovoltaïques de 15\pct{} du cahier des charges ne sont pas un paramètre distinct de la maquette ; elles sont supposées intégrées au profil de production fourni.
+\end{itemize}
+
+\section*{Organisation du rapport}
+
+Chaque chapitre répond à une sous-question de la problématique. Le chapitre~\ref{chap:enjeux} explique \emph{pourquoi} intégrer des EnR et \emph{comment on le mesure}. Le chapitre~\ref{chap:flex} montre \emph{ce que les EnR couvrent} heure par heure et \emph{jusqu'où aller}, avec quelles flexibilités. Le chapitre~\ref{chap:reseau} examine \emph{où le réseau peut accueillir} ces installations. Un glossaire et la liste des hypothèses figurent en annexe.
+
+% ============================================================
+%  CHAPITRE 1
+% ============================================================
+\chapter{Quels problèmes les EnR doivent-elles résoudre, et comment le mesurer ?}
+\label{chap:enjeux}
+
+\begin{retenir}
+Quatre enjeux justifient d'augmenter la production locale : dépendre moins du réseau (souveraineté), payer moins d'électricité achetée, atteindre les objectifs du PCAET et décarboner. Sur le premier, le simulateur chiffre l'effet : la part de la consommation achetée au réseau passe de 59 à 45\pct{} dans le scénario recommandé, et de 69 à 57\pct{} en hiver. L'objectif solaire du PCAET (175\gwh) n'est atteint que si le solaire augmente d'environ 45\pct. La décarbonation, l'investissement et le foncier ne sont pas calculés par le simulateur.
+\end{retenir}
+
+\section{Le territoire en chiffres}
+
+La consommation électrique de Mauges Communauté varie d'une année à l'autre avec la météo : de 782\gwh (2023) à 869\gwh (2021), pour une moyenne de 812\gwh sur les cinq années étudiées et 802,67\gwh en 2024 \cite{odre_conso}. Les logements représentent 39\pct{} de la consommation et le tertiaire 18\pct{} ; le reste (43\pct) relève de l'industrie, de l'agriculture et des autres usages. La pointe horaire de consommation atteint en moyenne 166~MW (jusqu'à 177~MW selon l'année).
+
+Le parc de production est dominé par l'éolien, qui fournit 217\gwh{} par an contre 121\gwh{} pour le solaire (en moyenne 2021-2025), plus 6\gwh{} de bioénergie et d'hydraulique. Il est inégalement réparti : les communes de Chemillé-en-Anjou (28~MW de solaire et 64~MW d'éolien) et de Beaupréau-en-Mauges (21 et 27~MW) concentrent à elles seules plus de la moitié du parc.
+
+\section{Quatre enjeux, quatre indicateurs}
+
+Le tableau~\ref{tab:enjeux} traduit chaque enjeu en indicateur chiffré, avec sa valeur actuelle (scénario A) et sa valeur dans le scénario recommandé, et précise si le simulateur le calcule.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Les enjeux du territoire comme cahier des charges chiffré.}
+\label{tab:enjeux}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}p{3.2cm}p{4.8cm}rrp{2.6cm}@{}}\toprule
+Enjeu & Indicateur & Aujourd'hui (A) & Recommandé & Calculé ?\\\midrule
+Souveraineté & Part de la consommation achetée au réseau (\%) & 58,5 & 44,7 & oui\\
+ & \quad dont en hiver (déc.-févr., 2022) & 68,5 & 56,8 & oui\\
+Coût d'achat & Achats au tarif réglementé (M\euro/an) & 92 & 70 & oui (borne haute)\\
+Objectif PCAET & Production solaire (GWh/an), cible 175 en 2030 & 121 & 151 & oui\\
+Adéquation aux usages & Taux de couverture horaire (\%) & 41,6 & 55,4 & oui\\
+Décarbonation & Émissions évitées (t\,CO$_2$/an) & --- & --- & non\\
+Investissement & Coût, rentabilité, délai de retour (M\euro) & --- & --- & non (seule la batterie)\\
+Foncier & Surfaces disponibles (ha) & --- & --- & ordre de grandeur\\
+\bottomrule\end{tabular}}
+\end{table}
+
+\section{Souveraineté et facture d'électricité}
+
+Aujourd'hui, Mauges Communauté achète au réseau 475\gwh{} par an, soit 58,5\pct{} de sa consommation : la production locale en couvre moins de la moitié, même si elle équivaut à 42\pct{} de la consommation annuelle. Dans le scénario recommandé, les achats tombent à 363\gwh{} (44,7\pct), soit 112\gwh{} de moins.
+
+L'effet est plus fort l'hiver, quand la dépendance est maximale (figure~\ref{fig:saisons}) : la part achetée passe de 68 à 57\pct. L'éolien, ajouté dans le scénario recommandé, y contribue directement. Au printemps, en été et à l'automne, le solaire et l'éolien permettent de descendre sous la moitié, de 51 et 50\pct{} à 37 et 34\pct.
+
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=.62\linewidth]{fig_saisons.pdf}
+% \caption{Part de la consommation achetée au réseau, par saison (année météo 2022).}
+% \label{fig:saisons}
+% \end{figure}
+
+\paragraph{Ce que cela représente en euros.} Valorisés au tarif réglementé de vente de 0,194~\euro/kWh \cite{cre_trve}, les achats passent de 92 à 70~M\euro{} par an : une économie de l'ordre de 22~M\euro. C'est une borne haute, car les gros consommateurs industriels paient l'électricité bien moins cher ; au prix de gros (environ 0,061~\euro/kWh en 2025), l'économie est plutôt de 7~M\euro. La revente du surplus (valorisé 0,02~\euro/kWh) rapporte moins d'un million d'euros par an dans tous les scénarios.
+
+\section{Objectifs du PCAET et objectifs de production}
+
+Le plan climat de Mauges Communauté fixe pour 2030 une production solaire de 175\gwh, ombrières et parcs au sol compris, et une part de 40\pct{} d'énergies renouvelables dans la consommation d'énergie du territoire \cite{pcaet_mauges}. Ce second objectif porte sur toutes les énergies (chaleur, carburants, électricité) et n'est pas comparable à nos résultats, qui ne portent que sur l'électricité. Le PCAET ne fixe pas, dans la synthèse de son plan d'action, d'objectif propre à l'éolien : nos scénarios éoliens sont donc des choix de l'étude, soumis à l'acceptabilité locale.
+
+Le parc solaire actuel produit 121\gwh{} par an. Atteindre 175\gwh{} demande d'augmenter la puissance solaire d'environ 45\pct{} (soit 53~MW). Le scénario recommandé, à $+25\pct$ (151\gwh), est à 86\pct{} de la cible. Une variante calculée pour ce rapport (solaire $+45\pct$, éolien $+25\pct$, ballons à midi) atteint l'objectif tout en respectant la limite d'écrêtement (2,6\pct, 3,5\pct{} au maximum selon l'année) ; son prix est un taux de couverture plus bas (52,6\pct) que dans le scénario recommandé. On ne peut donc pas viser en même temps le plus fort taux de couverture et l'objectif solaire du PCAET sans stockage : c'est un arbitrage à porter à la décision des élus.
+
+\section{Décarbonation, investissement et foncier : ce que le simulateur ne chiffre pas}
+
+\paragraph{Décarbonation.} Produire sur place évite d'acheter 112\gwh{} par an au réseau, mais le simulateur ne convertit pas cette énergie en émissions de CO$_2$ : cela demanderait un facteur d'émission horaire du réseau national, que les données éCO2mix permettraient d'ajouter \cite{rte_eco2mix}. Qualitativement, l'éolien produit surtout l'hiver et la nuit, périodes où le réseau national fait le plus appel à des moyens thermiques.
+
+\paragraph{Investissement.} Le simulateur chiffre le coût de la batterie (chapitre~\ref{chap:flex}) mais pas le coût des centrales solaires et éoliennes supplémentaires, ni leur exploitation, ni le coût complet du kWh, ni le délai de retour sur investissement. Ces éléments sont essentiels pour les décideurs et constituent la première suite à donner à l'étude.
+
+\paragraph{Foncier.} La maquette ne contient pas de données de surface disponible. Pour situer l'ordre de grandeur, on retient l'hypothèse courante d'environ 1 à 2~hectares par MWc pour le solaire au sol (hypothèse du rapport, non issue des données du projet). Le scénario recommandé ajoute 29~MWc de solaire, soit 29 à 59~ha, soit moins de 0,05\pct{} des 1\,313~km² du territoire ; le scénario B ajoute 118~MWc (118 à 236~ha, 0,09 à 0,18\pct) et le scénario C 235~MWc (235 à 470~ha, 0,18 à 0,36\pct). La surface totale n'est donc pas le facteur limitant ; ce sont l'usage agricole des sols, l'acceptabilité et le raccordement qui le sont, et ils ne sont pas chiffrés ici. Les toitures, les parkings et les friches, que le PCAET prévoit de recenser avec un cadastre solaire, restent à quantifier.
+
+% ============================================================
+%  CHAPITRE 2
+% ============================================================
+\chapter{Que couvrent les EnR heure par heure, jusqu'où aller et avec quelle flexibilité ?}
+\label{chap:flex}
+
+\begin{retenir}
+Le solaire produit à midi et l'éolien surtout l'hiver et la nuit. Doubler le solaire (B) fait gagner 8 points de couverture mais fait perdre 8,2\pct{} de la production ; le triple (C) en perd 21\pct. Les batteries du cahier des charges font disparaître l'écrêtement du scénario B mais coûtent 186~M\euro{} pour une valeur actuelle nette de $-207$ à $-243$~M\euro. Déplacer les ballons d'eau chaude vers midi, sans investissement lourd, réduit l'écrêtement de 4,0 à 3,2\pct{} et le scénario « éolien $+50\pct$, solaire $+25\pct$, ballons » est proche du maximum sans stockage.
+\end{retenir}
+
+\section{Le modèle en bref}
+
+Pour chaque heure $h$ d'une année, le simulateur calcule la production $P_h$ (solaire, éolien, bioénergie et hydraulique) à partir des facteurs de charge de l'année météo, et la consommation $C_h$ à partir des profils mesurés. Les indicateurs sont alors :
+\begin{itemize}
+  \item le \textbf{taux de couverture horaire} $= \sum_h \min(P_h, C_h) \big/ \sum_h C_h$ (batterie comprise) : la part de la consommation couverte \emph{sur place, au moment où elle a lieu} ;
+  \item le \textbf{surplus} : ce qui est produit en trop et envoyé au réseau ; le \textbf{déficit} : ce qui est acheté ;
+  \item l'\textbf{écrêtement} : la production perdue, en part de la production brute, qui doit rester sous 5\pct{} ;
+  \item l'\textbf{heure de vigilance} : $P_h > 1{,}2\,C_h$ ;
+  \item la \textbf{pointe d'injection} : l'excédent maximal envoyé au réseau.
+\end{itemize}
+
+\begin{definition}{Deux « taux de couverture » à ne pas confondre}
+Le rapport \emph{production annuelle / consommation annuelle} (42\pct{} aujourd'hui) mesure le volume. Le \emph{taux de couverture horaire} (41,6\pct) mesure la part réellement utilisée sur place, heure par heure. Dans ce rapport, « taux de couverture » désigne toujours le second ; l'autre est appelé « production / consommation ».
+\end{definition}
+
+Le moteur est un portage JavaScript d'un moteur de référence en Python, validé sur 125 cas de référence, et utilise les données ODRÉ, Enedis, RTE, Météo-France et INSEE pour 2021-2025 \cite{odre_registre,rte_eco2mix,enedis_profils,meteo_france}. Les hypothèses complètes figurent en annexe~\ref{ann:hyp}.
+
+\section{Les trois scénarios du cahier des charges}
+
+Le tableau~\ref{tab:bilan} et la figure~\ref{fig:scenarios} présentent le bilan énergétique. La production passe de 344\gwh{} (A) à 465\gwh{} (B) puis 694\gwh{} (C), mais le taux de couverture progresse bien moins vite : 41,6, 49,5 puis 61,7\pct. Le reste de la production en trop est soit envoyé au réseau (63\gwh{} en B, 193\gwh{} en C), soit perdu.
+
+% \begin{table}[htbp]
+% \centering\small
+% \caption{Bilan énergétique annuel des scénarios (moyenne 2021-2025).}
+% \label{tab:bilan}
+% \input{tables/tab_bilan}
+% \end{table}
+
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=\linewidth]{fig_scenarios.pdf}
+% \caption{Taux de couverture, énergie écrêtée et heures de vigilance par scénario.}
+% \label{fig:scenarios}
+% \end{figure}
+
+Les scénarios B et C \textbf{dépassent la limite de 5\pct{} d'écrêtement} chaque année : 8,2\pct{} en B (de 5,9 à 10,3\pct{} selon l'année météo) et 21,0\pct{} en C. Les heures de vigilance passent de 165 par an (A) à 1\,236 (B) et 2\,363 (C), c'est-à-dire plus d'une heure sur quatre.
+
+\section{Journée type et saisons}
+
+La figure~\ref{fig:journee} montre un jour ouvré moyen de janvier et de juillet. Le solaire (en orange) produit uniquement de 8 h à 18 h, avec un pic à midi qui, en été, approche la consommation du territoire dès le parc actuel ; l'éolien (en bleu), plus constant, domine en hiver. En été, l'ajout de solaire seul pousse la production au-dessus du seuil de 120\pct{} de la consommation, d'où l'écrêtement. Dans le scénario recommandé, l'éolien supplémentaire apporte de l'énergie à toute heure, ce qui élève le niveau de base sans trop augmenter le pic de midi.
+
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=\linewidth]{fig_journee.pdf}
+% \caption{Journée type (jour ouvré moyen, année 2022), parc actuel et scénario recommandé. Le vert représente la consommation des ballons d'eau chaude déplacée vers la journée.}
+% \label{fig:journee}
+% \end{figure}
+
+La figure~\ref{fig:mois} montre la même opposition au fil de l'année : la consommation est la plus forte l'hiver (barres de droite), quand la production locale couvre le moins, et les surplus (en orange) et les pertes (en rouge) apparaissent surtout au printemps et à l'automne dans le scénario recommandé.
+
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=\linewidth]{fig_mois.pdf}
+% \caption{Bilan mensuel : production et consommation (année 2022).}
+% \label{fig:mois}
+% \end{figure}
+
+\section{Quelle flexibilité choisir ?}
+
+Quatre leviers étaient disponibles. Nous les avons comparés sur leur effet et sur leur coût.
+
+\paragraph{Écrêter.} Accepter de perdre jusqu'à 5\pct{} de la production est la solution la moins coûteuse : en B, l'énergie écrêtée représente 39\gwh{} par an, valorisée 0,8~M\euro{} au prix du surplus. Mais cette limite est fixée par le cahier des charges et B la dépasse.
+
+\paragraph{Batterie centralisée.} Le cahier des charges impose une capacité de 2~heures de la puissance solaire, soit 471~MWh pour B et 706~MWh pour C. Le tableau~\ref{tab:batterie} montre l'effet et le coût en B : l'écrêtement disparaît (0,4 à 0,8\pct) mais l'investissement de 186~M\euro{} s'accompagne d'un coût d'entretien de 11,5~M\euro{} par an et d'un gain de 6 à 10~M\euro{} par an seulement. La valeur actuelle nette, sur 15 ans et à 4\pct, vaut $-207$ à $-243$~M\euro{} (hypothèses NREL 2025 \cite{nrel_storage}). En C, la batterie coûte 279~M\euro{} (VAN de $-241$ à $-272$~M\euro) et l'écrêtement reste au-dessus de 5\pct{} (6,3\pct{} en pilotage « pointe », 8,1\pct{} en « glouton »).
+
+% \begin{table}[htbp]
+% \centering\small
+% \caption{Effet et coût d'une batterie sur le scénario B.}
+% \label{tab:batterie}
+% \resizebox{\textwidth}{!}{\input{tables/tab_batterie}}
+% \end{table}
+
+\paragraph{Ballons d'eau chaude.} Le territoire compte environ 26\,000 ballons d'eau chaude électriques (52\pct{} des résidences principales), soit une puissance d'environ 58~MW et 27\gwh{} par an. En les chauffant à midi plutôt que la nuit, la consommation vient absorber le surplus solaire. Le tableau~\ref{tab:ballons} montre l'effet sur le scénario recommandé : l'écrêtement passe de 4,0 à 3,2\pct{} (et le maximum selon l'année de 5,0 à 4,1\pct, ce qui sort le scénario de la zone limite), la couverture gagne 0,9 point et les heures de vigilance baissent de 878 à 758. Le simulateur ne chiffre pas le coût de ce pilotage (télécommande ou horloge), mais il n'y a pas d'équipement lourd à installer, contrairement à la batterie.
+
+% \begin{table}[htbp]
+% \centering\small
+% \caption{Effet du déplacement des ballons d'eau chaude vers midi.}
+% \label{tab:ballons}
+% \resizebox{\textwidth}{!}{\input{tables/tab_ballons}}
+% \end{table}
+
+\paragraph{Véhicules électriques.} Le pilotage de la recharge n'a d'effet que dans l'horizon 2035, quand le parc de véhicules sera électrifié (environ 30\,600 VE, 67\gwh{} par an, soit 7\pct{} de la consommation 2035). Même en basculant à midi les 62\pct{} de recharges actuellement tarifaires (hypothèse extrême), le taux de couverture ne gagne que 0,4 point (tableau~\ref{tab:2035}).
+
+\paragraph{Pourquoi les ballons ?} Les ballons sont le levier qui combine trois avantages : un effet immédiat, sans attendre 2035 ; un coût d'investissement nul ou faible ; et une puissance importante concentrée aux heures de surplus. La batterie a un coût sans commune mesure avec son gain, et les véhicules électriques n'apportent, à ce stade, qu'un effet marginal. C'est pourquoi le scénario recommandé retient les ballons et laisse les véhicules électriques en perspective.
+
+\section{Jusqu'où aller sans stockage ?}
+
+Pour situer le seuil, nous avons fait varier le solaire pour chaque niveau d'éolien et cherché le solaire maximal qui respecte la limite de 5\pct{} d'écrêtement \emph{chaque année} (figure~\ref{fig:frontiere}, tableau~\ref{tab:frontiere}).
+
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=.8\linewidth]{fig_frontiere.pdf}
+% \caption{Solaire maximal compatible avec la limite d'écrêtement de 5\pct, selon l'éolien ajouté et le levier de flexibilité.}
+% \label{fig:frontiere}
+% \end{figure}
+
+% \begin{table}[htbp]
+% \centering\small
+% \caption{Solaire maximal compatible avec 5\pct{} d'écrêtement et taux de couverture correspondant.}
+% \label{tab:frontiere}
+% \resizebox{\textwidth}{!}{\input{tables/tab_frontiere}}
+% \end{table}
+
+Trois enseignements :
+\begin{itemize}
+  \item \textbf{Éolien et solaire se concurrencent.} Plus on ajoute d'éolien, moins il reste de place pour le solaire : à $+75\pct$ d'éolien, même le parc solaire actuel dépasse la limite certaines années.
+  \item \textbf{Le meilleur taux de couverture sans stockage est autour de 55 à 57\pct.} Il est atteint pour $+50\pct$ d'éolien et de $+25$ à $+40\pct$ de solaire (avec les ballons). Au-delà, on perd davantage qu'on ne gagne.
+  \item \textbf{Le scénario recommandé garde une marge.} Avec $+25\pct$ de solaire, l'écrêtement maximal sur les cinq années est de 4,1\pct, alors que la frontière ($+40\pct$) laisserait quasiment aucune marge face à une année météo plus favorable au solaire.
+\end{itemize}
+
+Avec une batterie dimensionnée à 0,8 fois la puissance solaire sur 2~heures, on pourrait aller jusqu'à $+110\pct$ de solaire pour $+50\pct$ d'éolien, avec une couverture de l'ordre de 65\pct, mais au prix déjà vu : plus de 100~M\euro{} d'investissement sans retour dans les conditions de prix retenues (par exemple $-151$~M\euro{} pour la variante avec batterie de la maquette, qui atteint 63,5\pct).
+
+\section{Et en 2035 ?}
+
+La maquette propose un horizon 2035 avec électrification des usages (pompes à chaleur, véhicules électriques) : la consommation passe de 812 à 904\gwh. Le tableau~\ref{tab:2035} montre que cette hausse \emph{réduit} le taux de couverture à parc inchangé (41,6 à 37,4\pct{}), mais qu'elle \emph{réduit aussi l'écrêtement}, car la consommation supplémentaire absorbe une partie du surplus. Le scénario recommandé reste conforme (2,4\pct) avec 50,6\pct{} de couverture.
+
+% \begin{table}[htbp]
+% \centering\small
+% \caption{Effet de l'électrification 2035 (consommation d'une année météo moyenne).}
+% \label{tab:2035}
+% \resizebox{\textwidth}{!}{\input{tables/tab_2035}}
+% \end{table}
+
+% ============================================================
+%  CHAPITRE 3
+% ============================================================
+\chapter{Où et à quelles conditions le réseau peut-il accueillir ces projets ?}
+\label{chap:reseau}
+
+\begin{retenir}
+Dans le scénario C, la pointe d'injection (241~MW) dépasse la pointe de consommation du territoire (166~MW) : le réseau devrait évacuer massivement vers l'extérieur. Étendre le parc à l'identique saturerait les postes sources de Chemillé, Saint-Pierre-Montlimart, Le Genêt et Aubigné dès le scénario recommandé, alors que quatre postes (Recouvrance, Saint-Georges, Cholet et Vallet) disposent de 137~MW libres. La recommandation n'est donc valable que si les nouveaux projets, surtout éoliens, sont orientés vers ces postes. La charge des postes est ici une estimation, pas une étude de réseau.
+\end{retenir}
+
+\section{Pointes d'injection et heures de vigilance}
+
+Le tableau~\ref{tab:pointes} compare les pointes. Aujourd'hui, la pointe d'injection (65~MW) est largement inférieure à la pointe de consommation du territoire (166~MW) : le réseau local n'a jamais à évacuer plus que ce qu'il pourrait consommer. Le scénario recommandé (112~MW) et le scénario B (134~MW) restent inférieurs à cette pointe ; le scénario C (241~MW) la dépasse de 75~MW, ce qui signifie des échanges importants avec le réseau de transport.
+
+% \begin{table}[htbp]
+% \centering\small
+% \caption{Pointes d'injection et de soutirage (MW, moyenne 2021-2025).}
+% \label{tab:pointes}
+% \resizebox{\textwidth}{!}{\input{tables/tab_pointes}}
+% \end{table}
+
+\section{Les postes sources du territoire}
+
+L'énergie produite localement rejoint le réseau de transport par des postes sources. Le schéma régional de raccordement au réseau des énergies renouvelables (S3REnR) réserve, pour chaque poste, une \emph{capacité d'accueil} destinée aux nouveaux projets. La capacité \emph{restante} est la capacité réservée moins les installations déjà raccordées et les projets en file d'attente. Le tableau~\ref{tab:postes} présente les neuf postes qui desservent le territoire, d'après Caparéseau (juin 2026) \cite{capareseau}. Les installations déjà raccordées (colonnes PV et éolien) incluent des projets plus anciens que le schéma, d'où des puissances installées parfois supérieures à la capacité réservée (Chemillé : 85~MW installés pour 60~MW réservés).
+
+% \begin{table}[htbp]
+% \centering\small
+% \caption{Postes sources du territoire : parc installé et capacité d'accueil S3REnR (juin 2026).}
+% \label{tab:postes}
+% \resizebox{\textwidth}{!}{\input{tables/tab_postes}}
+% \end{table}
+
+À ces postes s'ajoutent environ 28~MW de solaire diffus (toitures raccordées en basse tension) qui ne sont rattachés à aucun poste précis.
+
+\section{Que se passe-t-il si l'on ajoute X\pct{} de production ?}
+
+La maquette estime la charge de chaque poste en supposant que le parc supplémentaire se répartit \emph{comme le parc existant} : un poste qui porte aujourd'hui 20\pct{} du solaire en reçoit 20\pct{} de l'ajout. L'ajout de chaque poste est comparé à sa capacité restante (tableau~\ref{tab:ajouts}, figure~\ref{fig:postes}).
+
+% \begin{table}[htbp]
+% \centering\small
+% \caption{Ajout estimé par poste (MW) et saturation, si le parc est étendu à l'identique. « Rec. » : scénario recommandé.}
+% \label{tab:ajouts}
+% \resizebox{\textwidth}{!}{\input{tables/tab_ajouts}}
+% \end{table}
+
+% \begin{figure}[htbp]
+% \centering
+% \includegraphics[width=.9\linewidth]{fig_postes.pdf}
+% \caption{Capacité restante et ajout estimé par poste source.}
+% \label{fig:postes}
+% \end{figure}
+
+Dès le scénario B, Saint-Pierre-Montlimart dépasse sa capacité de 21~MW, Le Genêt de 6~MW et La Sourdrie de 3~MW. En C, Chemillé dépasse de 53~MW et six postes sur neuf sont saturés. Même le scénario recommandé, plus sobre (87~MW de puissance ajoutée dont 57~MW d'éolien), sature quatre postes si on l'étend à l'identique : Chemillé (de 14~MW), Saint-Pierre-Montlimart (13~MW), Le Genêt (8~MW) et Aubigné (4~MW).
+
+\section{Où raccorder ?}
+
+La capacité libre totale des postes du territoire est de 169~MW. Elle est très inégalement répartie : Chemillé (23~MW), Saint-Pierre-Montlimart (1~MW) et Le Genêt (0,5~MW) sont presque pleins, alors que Recouvrance (33~MW), Vallet (30~MW), Saint-Georges (29~MW) et Cholet (45~MW) disposent à eux quatre de 137~MW, plus que les 87~MW du scénario recommandé. Le scénario recommandé est donc compatible avec le réseau \emph{à condition} de choisir les sites : le point de vigilance est que plusieurs de ces postes (Vallet, Cholet) se trouvent en périphérie et peuvent ne pas être accessibles aux sites de projets les mieux placés pour le vent et le foncier.
+
+Ce constat a des implications concrètes : le choix des communes d'accueil des nouveaux parcs éoliens, la coordination avec le gestionnaire de réseau et les territoires voisins, et le recours à des solutions de gestion locale (limitation de l'injection, autoconsommation collective) là où une extension de poste est trop lourde.
+
+\section{Coûts et limites de l'estimation}
+
+\paragraph{Ordre de grandeur du coût.} Les producteurs raccordés au titre du S3REnR des Pays de la Loire s'acquittent d'une quote-part de 45,09~\euro/kW (approbation du 14~mars 2024), qui finance les ouvrages à créer (236~M\euro{} sur 371~M\euro{} pour 5\,000~MW de capacité nouvelle) \cite{dreal_s3renr}. Pour 87~MW de puissance ajoutée, cela représente un ordre de grandeur de 4~M\euro, à condition que les projets relèvent du schéma. Le coût et le délai d'un renforcement de poste source ou de la création d'un nouveau poste, qui peuvent dépasser largement ce montant, ne sont \emph{pas} estimés dans cette étude.
+
+\paragraph{Limites.} Trois précautions de lecture sont nécessaires. L'estimation de charge est proportionnelle au parc existant, elle ne s'appuie pas sur un calcul de flux ; la capacité S3REnR est une capacité de \emph{planification} réservée, pas un seuil physique de défaillance ; et les postes de bordure peuvent desservir aussi des communes voisines. Il serait faux de lire « saturé » comme « panne » : cela signifie qu'il faudrait renforcer le poste, rediriger les projets, ou limiter l'injection.
+
+% ============================================================
+%  ANNEXES
+% ============================================================
+\appendix
+\chapter{Glossaire}
+
+\begin{description}[leftmargin=3.2cm, style=nextline]
+  \item[Autoconsommation] Part de la production consommée sur place, heure par heure.
+  \item[BESS] \emph{Battery Energy Storage System} : stockage par batterie.
+  \item[Capacité réservée / restante] Capacité d'accueil de projets EnR d'un poste source, fixée par le S3REnR ; la partie restante est celle qui n'est ni raccordée ni en file d'attente.
+  \item[CAPEX / OPEX] Investissement initial / coûts d'exploitation annuels.
+  \item[Écrêtement] Perte volontaire de production quand le réseau ne peut ou ne doit pas absorber l'énergie.
+  \item[ECS] Eau chaude sanitaire (les « ballons »).
+  \item[Heure de vigilance] Heure où la production dépasse 120\pct{} de la consommation locale.
+  \item[HTA / HTB] Moyenne tension (distribution) / haute tension (transport).
+  \item[LCOE] Coût complet du kWh produit sur la vie d'une installation.
+  \item[PCAET] Plan Climat-Air-Énergie Territorial.
+  \item[Poste source] Poste de transformation entre le réseau de transport (HTB) et de distribution (HTA).
+  \item[S3REnR] Schéma régional de raccordement au réseau des énergies renouvelables.
+  \item[TRVE] Tarif réglementé de vente d'électricité.
+  \item[VAN] Valeur actuelle nette : somme actualisée des gains moins les coûts ; négative, l'investissement ne se rembourse pas.
+  \item[VE / PAC] Véhicule électrique / pompe à chaleur.
+\end{description}
+
+\chapter{Hypothèses principales du simulateur}
+\label{ann:hyp}
+
+\begin{table}[htbp]
+\centering\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}p{5cm}p{3.3cm}p{7cm}@{}}\toprule
+Paramètre & Valeur & Origine\\\midrule
+Parc actuel (solaire / éolien) & 117,73 / 114,40~MW & registre ODRÉ au 31/12/2025\\
+Seuil de vigilance & 120\pct{} de $C_h$ & cahier des charges\\
+Écrêtement maximal & 5\pct{} de la production & cahier des charges\\
+Batterie & 2~h de la puissance solaire, rendement 90\pct{} & cahier des charges\\
+Coût de la batterie & 395~\euro/kWh, 49~\euro/kW/an & NREL 2025 \cite{nrel_storage}\\
+Durée d'analyse, taux d'actualisation & 15 ans, 4\pct & NREL 2025 ; RTE\\
+Prix d'achat de l'électricité & 0,194~\euro/kWh & tarif réglementé \cite{cre_trve}\\
+Valeur du surplus & 0,02~\euro/kWh & CRE (délibération citée par la maquette)\\
+Ballons d'eau chaude & 52\pct{} des résidences principales, 1~MWh/an, 2,2~kW & ADEME, RTE\\
+Horizon 2035 & VE : 40\pct{} du parc, 30~km/jour, 18~kWh/100~km ; PAC : 25\pct{} des logements, COP~3 ; population $\times 1{,}029$ & fiches des Projets 1 et 3 ; INSEE\\
+Pertes photovoltaïques (15\pct) & non paramétrées & supposées incluses dans le profil de production\\
+\bottomrule\end{tabular}}
+\end{table}
+
+% ============================================================
+%  BIBLIOGRAPHIE
+% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{insee_rp}
+INSEE, \textit{Dossier complet --- CA Mauges Communauté (EPCI 200060010)}, recensement de la population 2023. \url{https://www.insee.fr/fr/statistiques/2011101?geo=EPCI-200060010}
+
+\bibitem{odre_conso}
+ODRÉ, \textit{Consommation d'électricité et de gaz par EPCI}, 2012-2024, Open Data Réseaux Énergies. \url{https://odre.opendatasoft.com/explore/dataset/conso-epci-annuelle/}
+
+\bibitem{odre_registre}
+ODRÉ, \textit{Registre national des installations de production et de stockage d'électricité}, données au 31/12/2025. \url{https://odre.opendatasoft.com/explore/dataset/registre-national-installation-production-stockage-electricite-agrege-311225/}
+
+\bibitem{rte_eco2mix}
+RTE, \textit{Données régionales éCO2mix consolidées (Pays de la Loire)}, 2021-2025. \url{https://odre.opendatasoft.com/explore/dataset/eco2mix-regional-cons-def/}
+
+\bibitem{enedis_profils}
+Enedis, \textit{Profils de consommation et d'injection par segment de puissance}, 2024-2025. \url{https://opendata.enedis.fr/datasets/conso-inf36-region}
+
+\bibitem{meteo_france}
+Météo-France, \textit{Données climatologiques de base horaires}, 2021-2025. \url{https://www.data.gouv.fr/fr/datasets/donnees-climatologiques-de-base-horaires/}
+
+\bibitem{pcaet_mauges}
+Mauges Communauté, \textit{PCAET : synthèse du plan d'action} (objectif de production solaire de 175~GWh en 2030). \url{https://www.maugescommunaute.fr/wp-content/uploads/MC-PCAET-synth\%C3\%A8se-plan-action.pdf}
+
+\bibitem{capareseau}
+RTE et Enedis, \textit{Caparéseau : capacités d'accueil des réseaux pour les énergies renouvelables}, postes sources, juin 2026. \url{https://www.capareseau.fr/}
+
+\bibitem{dreal_s3renr}
+DREAL Pays de la Loire, \textit{Exposé des motifs de la décision d'approbation de la quote-part du S3REnR}, 14 mars 2024. \url{https://www.pays-de-la-loire.developpement-durable.gouv.fr/IMG/pdf/2_expose_decision_approbation_quotepart.pdf}
+
+\bibitem{cre_trve}
+CRE, délibération relative aux tarifs réglementés de vente d'électricité (option Base au 1\textsuperscript{er} février 2026). \url{https://www.cre.fr/}
+
+\bibitem{nrel_storage}
+NREL, \textit{Cost Projections for Utility-Scale Battery Storage: 2025 Update}, National Renewable Energy Laboratory, 2025.
+
+\end{thebibliography}
+
+\end{document}
