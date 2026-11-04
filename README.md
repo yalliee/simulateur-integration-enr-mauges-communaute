@@ -19,6 +19,10 @@ Ce dossier contient une maquette interactive qui permet d'explorer des scénario
 
 Aucune installation de dépendances locales ni étape de compilation n'est nécessaire.
 
+## Accéder au simulateur en ligne
+
+Le workflow GitHub Actions publie `maquette_Imran.html` et `data.js` sur GitHub Pages à chaque modification de ces fichiers sur `main`. La page est accessible à l'adresse <https://yalliee.github.io/simulateur-integration-enr-mauges-communaute/> après activation de GitHub Pages dans les paramètres du dépôt et réussite du premier déploiement.
+
 ## Utilisation
 
 ### Vues
