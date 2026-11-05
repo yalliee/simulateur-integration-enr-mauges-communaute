@@ -7,8 +7,10 @@ on:
     paths:
       - ".github/workflows/pages.yml"
       - "index.html"
-      - "maquette_Imran.html"
+      - "maquette_quetinn.html"
       - "data.js"
+      - "precalcul.js"
+      - "vendor/**"
   workflow_dispatch:
 
 permissions:
@@ -33,7 +35,8 @@ jobs:
       - name: Prepare site
         run: |
           mkdir _site
-          cp index.html maquette_Imran.html data.js _site/
+          cp index.html maquette_quetinn.html data.js precalcul.js _site/
+          cp -R vendor _site/vendor
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
