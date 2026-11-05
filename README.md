@@ -6,30 +6,32 @@ Ce dossier contient une maquette interactive qui permet d'explorer des scénario
 
 | Fichier | Rôle |
 | --- | --- |
-| `maquette_Imran.html` | Maquette légère actuellement utilisée. Elle contient l'interface, le moteur JavaScript de simulation et charge les données depuis `data.js`. |
-| `data.js` | Données nécessaires à la maquette : paramètres, profils et scénarios, géographie, et séries horaires encodées. |
+| `maquette_quetinn.html` | Version de référence et version publiée sur GitHub Pages. Elle correspond au code de production de Quetinn, à un saut de ligne final près. |
+| `maquette_Imran.html` | Ancienne version de la maquette, conservée pour servir de base aux prochaines modifications à partir de la version de référence. Elle charge ses données depuis `data.js`. |
+| `data.js` | Données du simulateur : paramètres, profils et scénarios, géographie et séries horaires encodées. |
+| `index.html` | Point d'entrée GitHub Pages : redirige vers `maquette_quetinn.html`. |
+| `precalcul.js` | Précalculs nécessaires aux trajectoires et à l'analyse de sensibilité de `maquette_quetinn.html`. |
+| `vendor/` | Bibliothèques JavaScript, feuilles de style et polices utilisées localement par `maquette_quetinn.html`. Les licences d'ECharts et de Leaflet sont conservées dans leurs sous-dossiers. |
 | `maquette_v0.html` | Ancienne version autonome, plus volumineuse, dans laquelle les données sont intégrées directement au HTML. Elle ne reflète pas nécessairement les dernières modifications de l'interface. |
 | `extraire.py` | Script permettant d'extraire les blocs de données `META`, `GEO` et `BIN` d'un HTML source pour créer `data.js` et une version HTML allégée. |
 
-## Lancer la maquette
+## Lancer le simulateur
 
-1. Garder `maquette_Imran.html` et `data.js` dans le même dossier.
-2. Ouvrir `maquette_Imran.html` dans un navigateur récent.
-3. Une connexion Internet est nécessaire pour charger les bibliothèques et ressources externes : Leaflet, ECharts, les fonds de carte et les polices. Sans fond de carte, les autres fonctions du simulateur restent disponibles.
+Garder `maquette_quetinn.html`, `data.js`, `precalcul.js` et le dossier `vendor/` côte à côte, puis ouvrir `maquette_quetinn.html` dans un navigateur récent. Les scripts, feuilles de style et polices sont chargés localement ; seule la carte de fond nécessite Internet. Aucun serveur ni compilation n'est nécessaire.
 
-Aucune installation de dépendances locales ni étape de compilation n'est nécessaire.
+Les ressources de `vendor/` et `precalcul.js` proviennent du dossier [`app/` du dépôt public simulateur-mauges de Quetinn](https://github.com/quetinn/simulateur-mauges/tree/main/app). Elles ont été vérifiées par rapport aux fichiers de ce dépôt ; les licences fournies avec ECharts et Leaflet sont conservées.
 
 ## Accéder au simulateur en ligne
 
-Le workflow GitHub Actions publie `maquette_Imran.html` et `data.js` sur GitHub Pages à chaque modification de ces fichiers sur `main`. La page est accessible à l'adresse <https://yalliee.github.io/simulateur-integration-enr-mauges-communaute/> après activation de GitHub Pages dans les paramètres du dépôt et réussite du premier déploiement.
+Le site public est disponible à l'adresse <https://yalliee.github.io/simulateur-integration-enr-mauges-communaute/>. Son `index.html` redirige vers `maquette_quetinn.html`. Le workflow GitHub Actions publie la maquette, ses données, ses précalculs et le dossier `vendor/` à chaque modification de ces fichiers sur `main`.
 
 ## Utilisation
 
 ### Vues
 
 - **Élu** : résumé du scénario, indicateurs, verdict, journée type, carte et bilan mensuel.
-- **Démo** : parcours guidé de scénarios, avec navigation par boutons ou touches fléchées.
-- **Expert** : série horaire sur deux semaines, formulaire complet des hypothèses et comparaison des années météo.
+- **Démo** : parcours guidé en cinq étapes, utilisable au clavier ou avec les boutons.
+- **Expert** : analyse horaire, trajectoires, sensibilité, hypothèses détaillées, indicateurs par année et export CSV/JSON.
 
 Les vues **Élu**, **Démo** et **Expert**, ainsi que l'année météo, se choisissent dans l'en-tête ou dans la barre de commandes fixe en bas de l'écran. En **Démo**, le panneau de présentation est décalé pour laisser cette barre accessible. Les flèches sous l'en-tête replient ou ouvrent les barres latérales **Réglages** et **Affichage**.
 
@@ -59,7 +61,7 @@ Les sources indiquées dans la maquette comprennent ODRÉ, Enedis, RTE Eco2Mix, 
 
 ## Compiler les rapports LaTeX
 
-Les rapports `mon_rapport.tex` et `rapport_Thomas.tex` se compilent dans VS Code avec LaTeX Workshop : ouvrir le fichier `.tex`, puis lancer **Ctrl+Alt+B**. La recette pdfLaTeX est configurée par défaut. Les PDF sont générés directement dans ce dossier, à côté des fichiers `.tex` ; les fichiers auxiliaires sont rangés dans `out/`.
+Le rapport `rapport_Thomas.tex` se compile dans VS Code avec LaTeX Workshop : ouvrir le fichier `.tex`, puis lancer **Ctrl+Alt+B**. La recette pdfLaTeX est configurée par défaut. Le PDF est généré dans ce dossier ; les fichiers auxiliaires sont rangés dans `out/`.
 
 Les fichiers `.aux`, `.log`, `.out`, `.toc` et `.synctex.gz` sont des fichiers auxiliaires créés par LaTeX. Ils servent notamment aux références, aux signets, au diagnostic d'erreurs et à la synchronisation entre le code et le PDF. Il n'est pas nécessaire de les modifier ; le `.log` est à consulter en cas d'erreur de compilation.
 
